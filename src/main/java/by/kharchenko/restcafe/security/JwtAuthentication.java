@@ -14,7 +14,7 @@ import java.util.Set;
 public class JwtAuthentication implements Authentication {
 
     private boolean authenticated;
-    private Integer userId;
+    private Long userId;
     private Set<? extends GrantedAuthority> authorities;
 
     {

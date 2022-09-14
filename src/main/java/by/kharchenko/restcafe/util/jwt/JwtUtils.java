@@ -15,10 +15,10 @@ public final class JwtUtils {
 
     public static JwtAuthentication generate(Claims claims) {
         final JwtAuthentication jwtInfoToken = new JwtAuthentication();
-        jwtInfoToken.setUserId(Integer.parseInt(claims.getSubject()));
+        jwtInfoToken.setUserId(Long.parseLong(claims.getSubject()));
         Set<Role> roles = getRoles(claims);
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-        roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getRole().name())));
+        roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getRole().toString())));
         jwtInfoToken.setAuthorities(authorities);
         jwtInfoToken.setAuthenticated(true);
         return jwtInfoToken;

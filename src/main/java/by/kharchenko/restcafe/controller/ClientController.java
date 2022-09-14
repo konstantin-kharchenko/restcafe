@@ -6,12 +6,15 @@ import by.kharchenko.restcafe.model.dto.UserDTO;
 import by.kharchenko.restcafe.model.entity.User;
 import by.kharchenko.restcafe.model.mapper.UserMapper;
 import by.kharchenko.restcafe.model.service.UserService;
+import by.kharchenko.restcafe.security.JwtAuthentication;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
 import javax.validation.Valid;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/client")
@@ -20,11 +23,11 @@ public class ClientController {
 
     private final UserService userService;
 
-    @GetMapping("/{id}")
-    public UserDTO getClient(@PathVariable("id") Long id) throws ServletException {
-        User user = null;
+    @GetMapping()
+    public UserDTO getClient() throws ServletException {
         try {
-            user = userService.findById(id).get();
+            Long id = ((JwtAuthentication) SecurityContextHolder.getContext().getAuthentication()).getUserId();
+            User user = userService.findById(id).get();
             return UserMapper.INSTANCE.userToUserDTO(user);
         } catch (ServiceException e) {
             throw new RuntimeException(e);
@@ -41,7 +44,7 @@ public class ClientController {
             User user = UserMapper.INSTANCE.updateUserDTOToUser(updateUserDTO);
             user.setUserId(id);
             boolean isUpdate = userService.update(user);
-            if (!isUpdate){
+            if (!isUpdate) {
                 throw new ServletException("Failed to add user");
             }
         } catch (ServiceException e) {
