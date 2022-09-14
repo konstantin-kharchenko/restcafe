@@ -1,36 +1,45 @@
 package by.kharchenko.restcafe.controller;
 
+import by.kharchenko.restcafe.exception.ServiceException;
+import by.kharchenko.restcafe.model.dto.AuthenticateUserDTO;
+import by.kharchenko.restcafe.model.dto.TokenDTO;
 import by.kharchenko.restcafe.model.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Objects;
+import javax.servlet.ServletException;
+import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/auth")
 public class AuthController {
 
-    private UserService service;
+    private final UserService userService;
 
-    public AuthController(UserService service) {
-        this.service = service;
+    public AuthController(UserService userService) {
+        this.userService = userService;
     }
 
-    @PostMapping(path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody by.kharchenko.restcafe.model.entity.User getAuthUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null) {
-            return null;
+    @PostMapping(path = "/login")
+    public ResponseEntity getAuthUser(@Valid @RequestBody AuthenticateUserDTO authenticateUserDTO, BindingResult bindingResult) throws ServletException {
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
-        Object principal = auth.getPrincipal();
-        User user = (principal instanceof User) ? (User) principal : null;
-        return Objects.nonNull(user) ? this.service.getByLogin(user.getUsername()) : null;
+        try {
+            Optional<TokenDTO> tokenDto = userService.logIn(authenticateUserDTO);
+            if (tokenDto.isPresent()) {
+                return ResponseEntity.ok(tokenDto.get());
+            }
+        } catch (ServiceException e) {
+            throw new ServletException(e);
+        }
+        return ResponseEntity.status(400).build();
     }
 
 }

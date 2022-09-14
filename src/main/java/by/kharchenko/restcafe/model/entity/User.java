@@ -1,6 +1,9 @@
 package by.kharchenko.restcafe.model.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -9,6 +12,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Set;
 
 import static by.kharchenko.restcafe.controller.DbColumn.*;
 
@@ -16,7 +20,6 @@ import static by.kharchenko.restcafe.controller.DbColumn.*;
 @Table(name = USERS)
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class User extends AbstractEntity implements Serializable {
@@ -41,9 +44,9 @@ public class User extends AbstractEntity implements Serializable {
     @Email(message = "email must be valid")
     private String email;
 
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name = ROLE_ID)
-    private Role role;
+    @ManyToMany
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = USER_ID), inverseJoinColumns = @JoinColumn(name = ROLE_ID))
+    private Set<Role> roles;
 
     @Override
     public boolean equals(Object o) {
@@ -56,5 +59,14 @@ public class User extends AbstractEntity implements Serializable {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "userId = " + userId + ", " +
+                "login = " + login + ", " +
+                "password = " + password + ", " +
+                "email = " + email + ")";
     }
 }

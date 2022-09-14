@@ -1,6 +1,6 @@
 package by.kharchenko.restcafe.controller;
 
-import by.kharchenko.restcafe.security.JwtTokenRepository;
+import by.kharchenko.restcafe.security.JwtTokenProvider;
 import lombok.Getter;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.session.SessionAuthenticationException;
@@ -17,15 +17,14 @@ import javax.servlet.http.HttpServletResponse;
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private JwtTokenRepository tokenRepository;
+    private final JwtTokenProvider tokenRepository;
 
-    public GlobalExceptionHandler(JwtTokenRepository tokenRepository) {
+    public GlobalExceptionHandler(JwtTokenProvider tokenRepository) {
         this.tokenRepository = tokenRepository;
     }
 
     @ExceptionHandler({AuthenticationException.class, MissingCsrfTokenException.class, InvalidCsrfTokenException.class, SessionAuthenticationException.class})
     public ErrorInfo handleAuthenticationException(RuntimeException ex, HttpServletRequest request, HttpServletResponse response){
-        this.tokenRepository.clearToken(response);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         return new ErrorInfo(UrlUtils.buildFullRequestUrl(request), "error.authorization");
     }

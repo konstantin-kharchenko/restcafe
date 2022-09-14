@@ -21,9 +21,9 @@ import static by.kharchenko.restcafe.controller.DbColumn.*;
 public class Product extends AbstractEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = PRODUCT_ID)
-    private BigInteger idProduct;
+    private Long productId;
 
     @Column(name = NAME)
     private String name;
@@ -37,7 +37,7 @@ public class Product extends AbstractEntity implements Serializable {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Product product = (Product) o;
-        return idProduct != null && Objects.equals(idProduct, product.idProduct);
+        return productId != null && Objects.equals(productId, product.productId);
     }
 
     @Override

@@ -24,7 +24,7 @@ public class Order extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ORDER_ID)
-    private BigInteger idOrder;
+    private Long orderId;
 
     @Column(name = NAME)
     @NotEmpty(message = "name must not be empty")
@@ -44,7 +44,7 @@ public class Order extends AbstractEntity implements Serializable {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Order order = (Order) o;
-        return idOrder != null && Objects.equals(idOrder, order.idOrder);
+        return orderId != null && Objects.equals(orderId, order.orderId);
     }
 
     @Override

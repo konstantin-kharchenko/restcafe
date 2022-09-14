@@ -1,11 +1,12 @@
 package by.kharchenko.restcafe.util.encryption;
 
 import by.kharchenko.restcafe.exception.ServiceException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class EncryptionPassword {
+public class EncryptionPassword{
 
     private static final String ENCRYPTION_TYPE = "MD5";
 

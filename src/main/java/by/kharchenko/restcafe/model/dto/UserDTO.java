@@ -1,6 +1,6 @@
 package by.kharchenko.restcafe.model.dto;
 
-import by.kharchenko.restcafe.model.entity.Role;
+import by.kharchenko.restcafe.model.entity.RoleType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -25,5 +25,5 @@ public class UserDTO {
     private String login;
 
     @JsonProperty("role")
-    private Role role;
+    private RoleType role;
 }
