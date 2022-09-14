@@ -1,5 +1,6 @@
 package by.kharchenko.restcafe.model.dto;
 
+import by.kharchenko.restcafe.model.entity.Role;
 import by.kharchenko.restcafe.model.entity.RoleType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -7,6 +8,7 @@ import lombok.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import java.math.BigInteger;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -25,5 +27,5 @@ public class UserDTO {
     private String login;
 
     @JsonProperty("role")
-    private RoleType role;
+    private Set<Role> roles;
 }

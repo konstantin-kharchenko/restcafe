@@ -174,6 +174,7 @@ public class UserServiceImpl implements UserService {
         return Optional.empty();
     }
 
+    @Override
     public Optional<User> getByLogin(String login) {
         return userRepository.getByLogin(login);
     }
