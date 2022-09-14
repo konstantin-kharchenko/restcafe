@@ -27,7 +27,7 @@ public class AuthController {
     }
 
     @PostMapping(path = "/login")
-    public ResponseEntity getAuthUser(@Valid @RequestBody AuthenticateUserDTO authenticateUserDTO, BindingResult bindingResult) throws ServletException {
+    public ResponseEntity login(@Valid @RequestBody AuthenticateUserDTO authenticateUserDTO, BindingResult bindingResult) throws ServletException {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
         }

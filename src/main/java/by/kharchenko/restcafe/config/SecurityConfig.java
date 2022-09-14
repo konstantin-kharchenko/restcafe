@@ -23,10 +23,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().disable()
                 .csrf().disable().authorizeRequests()
-                .antMatchers("/login", "/registration").anonymous()
-                .antMatchers("/client/**", "/admin/**").authenticated()
-                .antMatchers(HttpMethod.GET, "/admin/**").hasAuthority(RoleType.ADMINISTRATOR.name())
-                .antMatchers(HttpMethod.GET, "/client/**").hasRole(RoleType.CLIENT.name())
+                .antMatchers(HttpMethod.GET, "/admin/**").hasRole("ADMINISTRATOR")
+                .antMatchers(HttpMethod.GET, "/client/**").hasRole("CLIENT")
                 .and()
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtTokenProvider));
         /*http.logout()

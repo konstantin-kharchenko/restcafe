@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
         }
         Set<Role> roleSet = userData.getRoles();
         Set<Role> administratorRole = roleSet.stream()
-                .filter(role -> role.getRole().equals(RoleType.ADMINISTRATOR))
+                .filter(role -> role.getRole().equals(RoleType.ROLE_ADMINISTRATOR))
                 .collect(Collectors.toSet());
         if (administratorRole.size() == 1) {
             Administrator administrator = new Administrator();
@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
             return false;
         }
         Set<Role> clientRole = roleSet.stream()
-                .filter(role -> role.getRole().equals(RoleType.CLIENT))
+                .filter(role -> role.getRole().equals(RoleType.ROLE_CLIENT))
                 .collect(Collectors.toSet());
         if (clientRole.size() == 1) {
             Client client = new Client();
@@ -112,16 +112,16 @@ public class UserServiceImpl implements UserService {
                 Set<Role> roleSet = userData.getRoles();
                 Set<Role> roleSetDb = userDb.getRoles();
                 Set<Role> administratorRole = roleSet.stream()
-                        .filter(role -> role.getRole().equals(RoleType.ADMINISTRATOR))
+                        .filter(role -> role.getRole().equals(RoleType.ROLE_ADMINISTRATOR))
                         .collect(Collectors.toSet());
                 Set<Role> administratorRoleDb = roleSetDb.stream()
-                        .filter(role -> role.getRole().equals(RoleType.ADMINISTRATOR))
+                        .filter(role -> role.getRole().equals(RoleType.ROLE_ADMINISTRATOR))
                         .collect(Collectors.toSet());
                 Set<Role> clientRole = roleSet.stream()
-                        .filter(role -> role.getRole().equals(RoleType.CLIENT))
+                        .filter(role -> role.getRole().equals(RoleType.ROLE_CLIENT))
                         .collect(Collectors.toSet());
                 Set<Role> clientRoleDb = roleSetDb.stream()
-                        .filter(role -> role.getRole().equals(RoleType.CLIENT))
+                        .filter(role -> role.getRole().equals(RoleType.ROLE_CLIENT))
                         .collect(Collectors.toSet());
                 if (administratorRole.size() == 1 && administratorRoleDb.size() == 0){
                     clientRepository.deleteByUser(userDb);

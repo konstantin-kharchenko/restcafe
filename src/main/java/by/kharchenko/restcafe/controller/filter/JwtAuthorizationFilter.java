@@ -34,10 +34,10 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 if (auth != null) {
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }
-
             } catch (Exception ex) {
                 SecurityContextHolder.clearContext();
             }
         }
+        chain.doFilter(request,response);
     }
 }

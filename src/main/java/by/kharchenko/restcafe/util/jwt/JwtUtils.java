@@ -30,14 +30,14 @@ public final class JwtUtils {
         for(LinkedHashMap<Object, Object> roleInfo: roles) {
             Role userRole = new Role();
             for(Map.Entry<Object, Object> entry: roleInfo.entrySet()) {
-                if(entry.getKey().equals("id")) {
+                if(entry.getKey().equals("roleId")) {
                     userRole.setRoleId(Long.parseLong(entry.getValue().toString()));
                 }
-                if(entry.getKey().equals("type")) {
+                if(entry.getKey().equals("role")) {
                     userRole.setRole(RoleType.valueOf(entry.getValue().toString()));
                 }
-                resultRoles.add(userRole);
             }
+            resultRoles.add(userRole);
         }
 
         return resultRoles;

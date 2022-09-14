@@ -1,6 +1,6 @@
 package by.kharchenko.restcafe.model.entity;
 
 public enum RoleType {
-    ADMINISTRATOR,
-    CLIENT
+    ROLE_ADMINISTRATOR,
+    ROLE_CLIENT
 }
