@@ -1,4 +1,4 @@
-package by.kharchenko.restcafe.model.dto;
+package by.kharchenko.restcafe.model.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

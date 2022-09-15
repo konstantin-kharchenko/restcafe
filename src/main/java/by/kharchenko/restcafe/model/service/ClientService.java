@@ -2,5 +2,5 @@ package by.kharchenko.restcafe.model.service;
 
 import by.kharchenko.restcafe.model.entity.Client;
 
-public interface ClientService extends BaseService<Client>{
+public interface ClientService {
 }

@@ -1,9 +1,13 @@
 package by.kharchenko.restcafe.model.service.impl;
 
 import by.kharchenko.restcafe.exception.ServiceException;
-import by.kharchenko.restcafe.model.dto.AuthenticateUserDTO;
-import by.kharchenko.restcafe.model.dto.TokenDTO;
+import by.kharchenko.restcafe.model.dto.token.TokenDTO;
+import by.kharchenko.restcafe.model.dto.user.AuthenticateUserDTO;
+import by.kharchenko.restcafe.model.dto.user.RegistrationUserDTO;
+import by.kharchenko.restcafe.model.dto.user.UpdateUserDTO;
+import by.kharchenko.restcafe.model.dto.user.UserDTO;
 import by.kharchenko.restcafe.model.entity.*;
+import by.kharchenko.restcafe.model.mapper.UserMapper;
 import by.kharchenko.restcafe.model.repository.AdminRepository;
 import by.kharchenko.restcafe.model.repository.ClientRepository;
 import by.kharchenko.restcafe.model.repository.UserRepository;
@@ -37,32 +41,27 @@ public class UserServiceImpl implements UserService {
     private final CustomMailSender mailSender;
 
     @Override
-    public boolean delete(User user) throws ServiceException {
-        userRepository.delete(user);
+    public boolean delete(Long id) throws ServiceException {
+        userRepository.deleteById(id);
         return true;
     }
 
     @Override
-    public boolean delete(Long id) throws ServiceException {
-        userRepository.deleteById(id);
-        return false;
-    }
-
-    @Override
-    public boolean add(User userData) throws ServiceException {
-        boolean isLoginExists = userRepository.findIdByLogin(userData.getLogin()).isPresent();
+    public boolean add(RegistrationUserDTO registrationUserDTO) throws ServiceException {
+        User user = UserMapper.INSTANCE.registrationUserDTOToUser(registrationUserDTO);
+        boolean isLoginExists = userRepository.findIdByLogin(user.getLogin()).isPresent();
         if (isLoginExists) {
             throw new ServiceException("this login is already exists");
         }
-        Set<Role> roleSet = userData.getRoles();
+        Set<Role> roleSet = user.getRoles();
         Set<Role> administratorRole = roleSet.stream()
                 .filter(role -> role.getRole().equals(RoleType.ROLE_ADMINISTRATOR))
                 .collect(Collectors.toSet());
         if (administratorRole.size() == 1) {
             Administrator administrator = new Administrator();
-            administrator.setUser(userData);
+            administrator.setUser(user);
             if (adminRepository.save(administrator).equals(administrator)) {
-                mailSender.sendCustomEmail(userData.getEmail(), APP_MAIL, REGISTRATION_HEAD_MAIL, REGISTRATION_TEXT_MAIL);
+                mailSender.sendCustomEmail(user.getEmail(), APP_MAIL, REGISTRATION_HEAD_MAIL, REGISTRATION_TEXT_MAIL);
                 return true;
             }
             return false;
@@ -72,9 +71,9 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toSet());
         if (clientRole.size() == 1) {
             Client client = new Client();
-            client.setUser(userData);
+            client.setUser(user);
             if (clientRepository.save(client).equals(client)) {
-                mailSender.sendCustomEmail(userData.getEmail(), APP_MAIL, REGISTRATION_HEAD_MAIL, REGISTRATION_TEXT_MAIL);
+                mailSender.sendCustomEmail(user.getEmail(), APP_MAIL, REGISTRATION_HEAD_MAIL, REGISTRATION_TEXT_MAIL);
                 return true;
             }
             return false;
@@ -83,33 +82,40 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findById(Long id) throws ServiceException {
-        return userRepository.findById(id);
+    public Optional<UserDTO> findById(Long id) throws ServiceException {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()){
+            UserDTO userDTO = UserMapper.INSTANCE.userToUserDTO(optionalUser.get());
+            return Optional.of(userDTO);
+        }
+        return Optional.empty();
     }
 
     @Override
-    public List<User> findAll() throws ServiceException {
-        return userRepository.findAll();
+    public List<UserDTO> findAll() throws ServiceException {
+        List<User> users = userRepository.findAll();
+        return UserMapper.INSTANCE.listUserTOListUserDTO(users);
     }
 
     @Override
     @Transactional
-    public boolean update(User userData) throws ServiceException {
-        boolean isLoginExists = userRepository.findAnotherIdByLogin(userData.getLogin(), userData.getUserId()).isPresent();
+    public boolean update(UpdateUserDTO userDTO) throws ServiceException {
+        User user = UserMapper.INSTANCE.updateUserDTOToUser(userDTO);
+        boolean isLoginExists = userRepository.findAnotherIdByLogin(user.getLogin(), user.getUserId()).isPresent();
         if (isLoginExists) {
             throw new ServiceException("this login is already exists");
         }
-        Optional<User> optionalUserDb = userRepository.findById(userData.getUserId());
+        Optional<User> optionalUserDb = userRepository.findById(user.getUserId());
         if (optionalUserDb.isPresent()) {
             User userDb = optionalUserDb.get();
-            if (userDb.getRoles() == userData.getRoles()){
-                userDb.setLogin(userData.getLogin());
-                userDb.setPassword(userData.getPassword());
-                userDb.setRoles(userData.getRoles());
+            if (userDb.getRoles() == user.getRoles()){
+                userDb.setLogin(user.getLogin());
+                userDb.setPassword(user.getPassword());
+                userDb.setRoles(user.getRoles());
                 return userRepository.save(userDb).equals(userDb);
             }
             else {
-                Set<Role> roleSet = userData.getRoles();
+                Set<Role> roleSet = user.getRoles();
                 Set<Role> roleSetDb = userDb.getRoles();
                 Set<Role> administratorRole = roleSet.stream()
                         .filter(role -> role.getRole().equals(RoleType.ROLE_ADMINISTRATOR))
@@ -125,18 +131,18 @@ public class UserServiceImpl implements UserService {
                         .collect(Collectors.toSet());
                 if (administratorRole.size() == 1 && administratorRoleDb.size() == 0){
                     clientRepository.deleteByUser(userDb);
-                    userDb.setLogin(userData.getLogin());
-                    userDb.setPassword(userData.getPassword());
-                    userDb.setRoles(userData.getRoles());
+                    userDb.setLogin(user.getLogin());
+                    userDb.setPassword(user.getPassword());
+                    userDb.setRoles(user.getRoles());
                     Administrator administrator = new Administrator();
                     administrator.setUser(userDb);
                     return adminRepository.save(administrator).equals(administrator);
                 }
                 else if (administratorRole.size() == 0 && administratorRoleDb.size() == 1){
                     adminRepository.deleteByUser(userDb);
-                    userDb.setLogin(userData.getLogin());
-                    userDb.setPassword(userData.getPassword());
-                    userDb.setRoles(userData.getRoles());
+                    userDb.setLogin(user.getLogin());
+                    userDb.setPassword(user.getPassword());
+                    userDb.setRoles(user.getRoles());
                     Client client = new Client();
                     client.setUser(userDb);
                     return clientRepository.save(client).equals(client);
@@ -175,8 +181,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> getByLogin(String login) {
-        return userRepository.getByLogin(login);
+    public Optional<UserDTO> getByLogin(String login) {
+        Optional<User> optionalUser = userRepository.getByLogin(login);
+        if (optionalUser.isPresent()){
+            UserDTO userDTO = UserMapper.INSTANCE.userToUserDTO(optionalUser.get());
+            return Optional.of(userDTO);
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -187,5 +198,20 @@ public class UserServiceImpl implements UserService {
             roles = optionalUser.get().getRoles();
         }
         return roles;
+    }
+
+    @Override
+    public Optional<TokenDTO> refresh(String refreshToken) throws ServiceException {
+        if (refreshToken != null && jwtTokenProvider.validateToken(refreshToken, JwtType.REFRESH)) {
+            Long userId = Long.parseLong(jwtTokenProvider.getRefreshClaims(refreshToken).getSubject());
+            Optional<User> optionalUser = userRepository.findById(userId);
+            if (optionalUser.isPresent()) {
+                String accessToken = jwtTokenProvider.createAccessToken(optionalUser.get());
+                TokenDTO tokenDto = new TokenDTO(refreshToken, accessToken);
+                return Optional.of(tokenDto);
+            }
+        }
+
+        return Optional.empty();
     }
 }

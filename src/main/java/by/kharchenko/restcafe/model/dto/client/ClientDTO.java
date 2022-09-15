@@ -1,5 +1,7 @@
-package by.kharchenko.restcafe.model.dto;
+package by.kharchenko.restcafe.model.dto.client;
 
+import by.kharchenko.restcafe.model.dto.order.OrderDTO;
+import by.kharchenko.restcafe.model.dto.user.UserDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +15,7 @@ import java.util.Set;
 public class ClientDTO {
 
     @JsonProperty("idClient")
-    private BigInteger idClient;
+    private Long clientId;
 
     @JsonProperty("loyaltyPoints")
     private int loyaltyPoints;

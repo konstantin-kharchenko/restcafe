@@ -1,28 +1,27 @@
 package by.kharchenko.restcafe.controller;
 
 import by.kharchenko.restcafe.exception.ServiceException;
-import by.kharchenko.restcafe.model.dto.AuthenticateUserDTO;
-import by.kharchenko.restcafe.model.dto.TokenDTO;
+import by.kharchenko.restcafe.model.dto.user.AuthenticateUserDTO;
+import by.kharchenko.restcafe.model.dto.token.TokenDTO;
 import by.kharchenko.restcafe.model.service.UserService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
 import javax.validation.Valid;
 import java.util.Optional;
 
-@RestController
-public class AuthController {
+import static by.kharchenko.restcafe.model.entity.RoleType.ROLE_CLIENT;
 
+@RestController
+public class AuthenticationController {
+    private static final String REFRESH_TOKEN = "Refresh-Token";
     private final UserService userService;
 
-    public AuthController(UserService userService) {
+    public AuthenticationController(UserService userService) {
         this.userService = userService;
     }
 
@@ -42,4 +41,17 @@ public class AuthController {
         return ResponseEntity.status(400).build();
     }
 
+    @GetMapping("/refresh")
+    public ResponseEntity refresh(@RequestHeader(name = REFRESH_TOKEN) String refreshToken) throws ServletException {
+
+        try {
+            Optional<TokenDTO> tokenDtoOptional = userService.refresh(refreshToken);
+            if (tokenDtoOptional.isPresent()) {
+                return ResponseEntity.ok(tokenDtoOptional.get());
+            }
+            return ResponseEntity.status(401).build();
+        } catch (ServiceException e) {
+            throw new ServletException(e);
+        }
+    }
 }

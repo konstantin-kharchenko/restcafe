@@ -1,4 +1,4 @@
-package by.kharchenko.restcafe.model.dto;
+package by.kharchenko.restcafe.model.dto.ingredient;
 
 import by.kharchenko.restcafe.model.entity.IngredientGrams;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,7 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class IngredientDTO {
     @JsonProperty("idIngredient")
-    private BigInteger idIngredient;
+    private Long ingredientId;
 
     @JsonProperty("name")
     private String name;

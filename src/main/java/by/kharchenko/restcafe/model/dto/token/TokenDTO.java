@@ -1,4 +1,4 @@
-package by.kharchenko.restcafe.model.dto;
+package by.kharchenko.restcafe.model.dto.token;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,6 +1,6 @@
 package by.kharchenko.restcafe.model.mapper;
 
-import by.kharchenko.restcafe.model.dto.ProductDTO;
+import by.kharchenko.restcafe.model.dto.product.ProductDTO;
 import by.kharchenko.restcafe.model.entity.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

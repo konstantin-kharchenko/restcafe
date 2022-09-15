@@ -3,7 +3,6 @@ package by.kharchenko.restcafe.security;
 import by.kharchenko.restcafe.model.entity.JwtType;
 import by.kharchenko.restcafe.model.entity.User;
 import io.jsonwebtoken.*;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -18,16 +17,20 @@ import java.util.Date;
 public class JwtTokenProvider {
     private final String accessSecret;
     private final String refreshSecret;
+    private final long lifetimeAccessToken;
+    private final long lifetimeRefreshToken;
 
     @Autowired
-    public JwtTokenProvider(@Value("${jwt.token.access.secret-key}") String accessSecret, @Value("${jwt.token.refresh.secret-key}") String refreshSecret) {
+    public JwtTokenProvider(@Value("${jwt.token.access.secret-key}") String accessSecret, @Value("${jwt.token.refresh.secret-key}") String refreshSecret, @Value("${lifetime.access.token}")  long lifetimeAccessToken, @Value("${lifetime.refresh.token}") long lifetimeRefreshToken) {
         this.accessSecret = Base64.getEncoder().encodeToString(accessSecret.getBytes());
         this.refreshSecret = Base64.getEncoder().encodeToString(refreshSecret.getBytes());
+        this.lifetimeAccessToken = lifetimeAccessToken;
+        this.lifetimeRefreshToken = lifetimeRefreshToken;
     }
 
     public String createAccessToken(User user) {
         final LocalDateTime now = LocalDateTime.now();
-        final Instant accessExpirationInstant = now.plusMinutes(15).atZone(ZoneId.systemDefault()).toInstant();
+        final Instant accessExpirationInstant = now.plusMinutes(lifetimeAccessToken).atZone(ZoneId.systemDefault()).toInstant();
         final Date accessExpiration = Date.from(accessExpirationInstant);
 
         return Jwts.builder()
@@ -41,7 +44,7 @@ public class JwtTokenProvider {
 
     public String createRefreshToken(User user) {
         final LocalDateTime now = LocalDateTime.now();
-        final Instant refreshExpirationInstant = now.plusDays(30).atZone(ZoneId.systemDefault()).toInstant();
+        final Instant refreshExpirationInstant = now.plusDays(lifetimeRefreshToken).atZone(ZoneId.systemDefault()).toInstant();
         final Date refreshExpiration = Date.from(refreshExpirationInstant);
 
         return Jwts.builder()

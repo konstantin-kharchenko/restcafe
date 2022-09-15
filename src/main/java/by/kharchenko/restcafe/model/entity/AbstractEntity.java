@@ -1,4 +1,4 @@
 package by.kharchenko.restcafe.model.entity;
 
-public class AbstractEntity {
+public abstract class AbstractEntity {
 }

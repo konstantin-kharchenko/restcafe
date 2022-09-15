@@ -1,7 +1,7 @@
 package by.kharchenko.restcafe.controller;
 
 import by.kharchenko.restcafe.exception.ServiceException;
-import by.kharchenko.restcafe.model.dto.RegistrationUserDTO;
+import by.kharchenko.restcafe.model.dto.user.RegistrationUserDTO;
 import by.kharchenko.restcafe.model.entity.User;
 import by.kharchenko.restcafe.model.mapper.UserMapper;
 import by.kharchenko.restcafe.model.service.UserService;
@@ -27,8 +27,7 @@ public class RegistrationController {
             if (result.hasErrors()) {
                 throw new ServletException(result.toString());
             }
-            User user = UserMapper.INSTANCE.registrationUserDTOToUser(registrationUserDTO);
-            boolean isAdd = userService.add(user);
+            boolean isAdd = userService.add(registrationUserDTO);
             if (!isAdd){
                 throw new ServletException("Failed to add user");
             }
