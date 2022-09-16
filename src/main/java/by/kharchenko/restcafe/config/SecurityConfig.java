@@ -27,8 +27,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/admin/**").hasRole(ROLE_ADMINISTRATOR.getName())
                 .antMatchers(HttpMethod.GET, "/client/**").hasRole(ROLE_CLIENT.getName())
+                .antMatchers("/perform-logout").authenticated()
                 .and()
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtTokenProvider));
+        http.logout()
+                .logoutUrl("/perform-logout")
+                .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
+                .clearAuthentication(true)
+                .invalidateHttpSession(true);
     }
 }
 
