@@ -4,8 +4,10 @@ import by.kharchenko.restcafe.controller.filter.JwtAuthorizationFilter;
 import by.kharchenko.restcafe.model.entity.RoleType;
 import by.kharchenko.restcafe.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
@@ -25,14 +27,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().disable()
                 .csrf().disable().authorizeRequests()
+                .antMatchers("/refresh").authenticated()
                 .antMatchers(HttpMethod.GET, "/admin/**").hasRole(ROLE_ADMINISTRATOR.getName())
                 .antMatchers(HttpMethod.GET, "/client/**").hasRole(ROLE_CLIENT.getName())
                 .antMatchers("/perform-logout").authenticated()
                 .and()
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtTokenProvider));
         http.logout()
+                .logoutSuccessUrl("/home")
                 .logoutUrl("/perform-logout")
-                .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
+                /*.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())*/
                 .clearAuthentication(true)
                 .invalidateHttpSession(true);
     }

@@ -43,7 +43,6 @@ public class AuthenticationController {
 
     @GetMapping("/refresh")
     public ResponseEntity refresh(@RequestHeader(name = REFRESH_TOKEN) String refreshToken) throws ServletException {
-
         try {
             Optional<TokenDTO> tokenDtoOptional = userService.refresh(refreshToken);
             if (tokenDtoOptional.isPresent()) {
