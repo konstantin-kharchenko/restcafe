@@ -53,9 +53,4 @@ public class AuthenticationController {
             throw new ServletException(e);
         }
     }
-
-    @GetMapping("/perform-logout")
-    public void logout() throws ServletException {
-        SecurityContextHolder.clearContext();
-    }
 }

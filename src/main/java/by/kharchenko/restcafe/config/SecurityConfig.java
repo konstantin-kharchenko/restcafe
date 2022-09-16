@@ -34,9 +34,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtTokenProvider));
         http.logout()
-                .logoutSuccessUrl("/home")
                 .logoutUrl("/perform-logout")
-                /*.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())*/
+                .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
                 .clearAuthentication(true)
                 .invalidateHttpSession(true);
     }
