@@ -20,5 +20,7 @@ public interface OrderService {
 
     boolean update(UpdateOrderDTO orderDTO) throws ServiceException;
 
+    Optional<OrderDTO> findByName(String name);
+
     Long count() throws ServiceException;
 }
