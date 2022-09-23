@@ -16,7 +16,6 @@ import by.kharchenko.restcafe.model.repository.UserRepository;
 import by.kharchenko.restcafe.model.service.OrderService;
 import by.kharchenko.restcafe.security.JwtAuthentication;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 

@@ -2,8 +2,6 @@ package by.kharchenko.restcafe.controller;
 
 import by.kharchenko.restcafe.exception.ServiceException;
 import by.kharchenko.restcafe.model.dto.user.RegistrationUserDTO;
-import by.kharchenko.restcafe.model.entity.User;
-import by.kharchenko.restcafe.model.mapper.UserMapper;
 import by.kharchenko.restcafe.model.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.validation.BindingResult;

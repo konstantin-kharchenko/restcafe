@@ -8,20 +8,17 @@ import by.kharchenko.restcafe.model.entity.Product;
 import by.kharchenko.restcafe.model.mapper.ProductMapper;
 import by.kharchenko.restcafe.model.repository.ProductRepository;
 import by.kharchenko.restcafe.model.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-
-    public ProductServiceImpl(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
 
     @Override
     public boolean delete(Long id) throws ServiceException {

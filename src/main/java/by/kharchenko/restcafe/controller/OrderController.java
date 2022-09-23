@@ -3,7 +3,6 @@ package by.kharchenko.restcafe.controller;
 import by.kharchenko.restcafe.exception.ServiceException;
 import by.kharchenko.restcafe.model.dto.order.CreateOrderDTO;
 import by.kharchenko.restcafe.model.dto.order.OrderDTO;
-import by.kharchenko.restcafe.model.service.ClientService;
 import by.kharchenko.restcafe.model.service.OrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

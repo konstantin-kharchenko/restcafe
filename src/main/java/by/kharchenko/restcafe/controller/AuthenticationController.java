@@ -1,20 +1,17 @@
 package by.kharchenko.restcafe.controller;
 
 import by.kharchenko.restcafe.exception.ServiceException;
-import by.kharchenko.restcafe.model.dto.user.AuthenticateUserDTO;
 import by.kharchenko.restcafe.model.dto.token.TokenDTO;
+import by.kharchenko.restcafe.model.dto.user.AuthenticateUserDTO;
 import by.kharchenko.restcafe.model.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
 import javax.validation.Valid;
 import java.util.Optional;
-
-import static by.kharchenko.restcafe.model.entity.RoleType.ROLE_CLIENT;
 
 @RestController
 public class AuthenticationController {
