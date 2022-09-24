@@ -17,6 +17,7 @@ import by.kharchenko.restcafe.util.email.CustomMailSender;
 import by.kharchenko.restcafe.util.encryption.EncryptionPassword;
 import by.kharchenko.restcafe.util.filereadwrite.FileReaderWriter;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private static final String APP_MAIL = "cafe.from.app@mail.ru";
