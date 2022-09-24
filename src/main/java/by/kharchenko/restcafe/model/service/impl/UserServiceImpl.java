@@ -37,7 +37,6 @@ public class UserServiceImpl implements UserService {
     private final ClientRepository clientRepository;
     private final AdminRepository adminRepository;
     private final JwtTokenProvider jwtTokenProvider;
-    private final FileReaderWriter readerWriter;
     private final CustomMailSender mailSender;
 
     @Override
@@ -47,6 +46,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public boolean add(RegistrationUserDTO registrationUserDTO) throws ServiceException {
         User user = UserMapper.INSTANCE.registrationUserDTOToUser(registrationUserDTO);
         boolean isLoginExists = userRepository.findIdByLogin(user.getLogin()).isPresent();
