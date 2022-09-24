@@ -36,6 +36,7 @@ After that, the controller returns the Entity. The conversion of the Entity to a
 + Spring Data JPA
 + Spring Boot
 + Spring Security
++ JWT 
 + Lombok
 + Mapstruct
 + Mail Sender
