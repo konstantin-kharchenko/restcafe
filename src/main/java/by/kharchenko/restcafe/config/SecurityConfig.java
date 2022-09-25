@@ -27,6 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/refresh").authenticated()
                 .antMatchers(HttpMethod.GET, "/admin/**").hasRole(ROLE_ADMINISTRATOR.getName())
                 .antMatchers(HttpMethod.GET, "/client/**").hasRole(ROLE_CLIENT.getName())
+                .antMatchers(HttpMethod.GET, "/home").permitAll()
                 //.antMatchers("/").hasRole(ROLE_ADMINISTRATOR.getName())
                 .antMatchers("/order/create").hasRole(ROLE_CLIENT.getName())
                 .antMatchers("/perform-logout").authenticated()

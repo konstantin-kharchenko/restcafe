@@ -28,16 +28,18 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String accessToken = request.getHeader(ACCESS_TOKEN);
-        if (accessToken != null && jwtTokenProvider.validateToken(accessToken, JwtType.ACCESS)) {
-            try {
-                JwtAuthentication auth = JwtUtils.generate(jwtTokenProvider.getAccessClaims(accessToken));
-                if (auth != null) {
+        if (accessToken != null) {
+            if (jwtTokenProvider.validateToken(accessToken, JwtType.ACCESS)) {
+                try {
+                    JwtAuthentication auth = JwtUtils.generate(jwtTokenProvider.getAccessClaims(accessToken));
                     SecurityContextHolder.getContext().setAuthentication(auth);
+                } catch (Exception ex) {
+                    SecurityContextHolder.clearContext();
                 }
-            } catch (Exception ex) {
-                SecurityContextHolder.clearContext();
+            } else {
+                SecurityContextHolder.getContext().setAuthentication(null);
             }
         }
-        chain.doFilter(request,response);
+        chain.doFilter(request, response);
     }
 }
