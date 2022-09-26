@@ -33,6 +33,7 @@ After that, the controller returns the Entity. The conversion of the Entity to a
 ### Applied technologies:
 + Spring Core
 + REST
++ Websocket
 + Spring Data JPA
 + Spring Boot
 + Spring Security
