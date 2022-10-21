@@ -44,3 +44,6 @@ After that, the controller returns the Entity. The conversion of the Entity to a
 + PostgreSQL
 + Hibernate Validator
 + Password encoding
+
+
+лоо
